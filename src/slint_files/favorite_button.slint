@@ -1,0 +1,25 @@
+export component FavBtn inherits TouchArea {
+    height: 40px;
+    width: 40px;
+
+    property <image> empty: @image-url("../assets/icons/star-regular-full.svg");
+    property <image> full: @image-url("../assets/icons/star-solid-full.svg");
+    in property <string> location: "";
+    in-out property <bool> favorited: false;
+
+    mouse-cursor: pointer;
+
+    callback toggle-favorite(string, bool);
+
+    clicked => {
+        favorited = !favorited;
+        toggle-favorite(location, favorited);
+    }
+
+    Image {
+        source: favorited == false ? empty : full;
+        height: 100%;
+
+        vertical-alignment: center;
+    }
+}

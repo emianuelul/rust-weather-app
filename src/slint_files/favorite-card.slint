@@ -1,0 +1,100 @@
+import { HorizontalSpacer } from "spacers.slint";
+import { WeatherIcon } from "weather_icon.slint";
+
+export component FavoriteCard inherits TouchArea {
+    in property <string> icon: "default";
+    in property <string> name: "N/A";
+
+    in property <float> temp;
+    in property <float> temp-min;
+    in property <float> temp-max;
+
+    mouse-cursor: pointer;
+
+    height: 80px;
+
+    callback call-api(string);
+
+    clicked => {
+        call-api(name);
+    }
+
+    Rectangle {
+        background: root.has-hover ? rgba(152, 231, 241, 0.4) : rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        border-width: 1px;
+        border-color: rgba(255, 255, 255, 0.2);
+        drop-shadow-blur: 30px;
+        drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+        transform-scale: root.has-hover ? 1.04 : 1.0;
+
+        animate transform-scale {
+            duration: 200ms;
+            easing: ease-out;
+        }
+
+        animate background {
+            duration: 200ms;
+            easing: ease-out;
+        }
+
+        HorizontalLayout {
+            padding: 16px;
+            spacing: 32px;
+
+            VerticalLayout {
+                padding-left: 16px;
+                alignment: center;
+                WeatherIcon {
+                    icon: icon;
+                    height: 45px;
+                }
+            }
+
+            Text {
+                text: name;
+                font-size: 24px;
+                font-weight: 600;
+                color: #07101e;
+                horizontal-alignment: left;
+                vertical-alignment: center;
+            }
+
+            HorizontalSpacer { }
+
+            VerticalLayout {
+                alignment: center;
+                height: 100%;
+                Text {
+                    text: temp + "°C";
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: #07101e;
+                    horizontal-alignment: center;
+                }
+
+                HorizontalLayout {
+                    spacing: 1rem;
+                    alignment: center;
+
+                    Text {
+                        text: "L:" + temp-max + "°C";
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: rgba(44, 59, 83, 0.6);
+                        horizontal-alignment: center;
+                    }
+
+                    Text {
+                        text: "H:" + temp-min + "°C";
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: rgba(44, 59, 83, 0.6);
+                        horizontal-alignment: center;
+                    }
+                }
+            }
+        }
+    }
+}

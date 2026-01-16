@@ -1,0 +1,26 @@
+export component ErrorToast inherits Rectangle {
+    in property <string> error-message: "ERROR: Searched Location is Invalid";
+
+    width: 350px;
+    height: error-text.preferred-height + 32px;
+    background: #dd4b27;
+    border-radius: 8px;
+    drop-shadow-blur: 10px;
+    drop-shadow-color: rgba(0, 0, 0, 0.3);
+    drop-shadow-offset-y: 2px;
+
+    HorizontalLayout {
+        padding: 16px;
+        spacing: 12px;
+        alignment: start;
+
+        error-text := Text {
+            text: error-message;
+            color: white;
+            font-size: 16px;
+            wrap: word-wrap;
+            vertical-alignment: center;
+            horizontal-stretch: 1;
+        }
+    }
+}

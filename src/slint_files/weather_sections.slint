@@ -1,0 +1,381 @@
+export enum WeatherSectionType{
+    temp,
+    precip,
+    snow,
+    wind,
+    location,
+    main
+}
+
+import { HorizontalSpacer } from "spacers.slint";
+import { FavBtn } from "favorite_button.slint";
+import { WeatherIcon } from "weather_icon.slint";
+
+
+export component WeatherSection inherits Rectangle {
+    in property <WeatherSectionType> type;
+
+    vertical-stretch: 1;
+
+    // type = temp
+    in property <float> min;
+    in property <float> feels_like;
+    in property <float> max;
+
+    // type = precip
+    in property <float> precip;
+    in property <float> humidity;
+    in property <float> precip_ch;
+
+    // type = snow
+    in property <float> snow;
+    in property <float> snow_depth;
+
+    // type = wind
+    in property <float> wind_speed;
+    in property <float> wind_dir;
+    in property <float> aqieur;
+
+    // type = location
+    in property <string> location-name;
+    in property <string> condition;
+    in-out property <bool> is-favorited: false;
+
+    // type = main
+    in property <float> temp;
+    in property <string> icon: "default";
+
+    callback toggleFav(string, bool);
+
+    type: WeatherSectionType.main;
+
+    background: rgba(255, 255, 255, 0.75);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    drop-shadow-blur: 30px;
+    drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+    VerticalLayout {
+        padding: type == WeatherSectionType.main ? 6px : 12px;
+        alignment: center;
+        if type == WeatherSectionType.temp: GridLayout {
+            spacing: 10px;
+
+            Row {
+                Text {
+                    text: "Lowest";
+                    font-size: 12px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: "Feels like";
+                    font-size: 12px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: "Highest";
+                    font-size: 12px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+
+            Row {
+                Text {
+                    text: min + "°C";
+                    color: #07101e;
+                    font-size: 18px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: feels_like + "°C";
+                    color: #07101e;
+                    font-size: 18px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: max + "°C";
+                    color: #07101e;
+                    font-size: 18px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+        }
+
+        if type == WeatherSectionType.precip: GridLayout {
+            spacing: 10px;
+
+            Row {
+                Text {
+                    text: "Amount:";
+                    font-size: 14px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: precip + " mm";
+                    color: #07101e;
+                    font-weight: 600;
+                    font-size: 16px;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+
+            Row {
+                Text {
+                    text: "Humidity:";
+                    font-size: 14px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: humidity + "%";
+                    color: #07101e;
+                    font-size: 16px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+
+            Row {
+                Text {
+                    text: "Chance:";
+                    font-size: 14px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: precip_ch + "%";
+                    color: #07101e;
+                    font-size: 16px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+        }
+
+        if type == WeatherSectionType.snow: GridLayout {
+            spacing: 10px;
+
+            Row {
+                Text {
+                    text: "Snowfall:";
+                    font-size: 16px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: snow + " cm";
+                    color: #07101e;
+                    font-size: 16px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+
+            Row {
+                Text {
+                    text: "Snow depth:";
+                    color: #7f8c8d;
+                    font-size: 16px;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: snow_depth + " cm";
+                    color: #07101e;
+                    font-size: 16px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+        }
+
+        if type == WeatherSectionType.wind: GridLayout {
+            spacing: 10px;
+
+            Row {
+                Text {
+                    text: "Speed";
+                    font-size: 14px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: "Direction";
+                    font-size: 14px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: "AQI (EUR)";
+                    font-size: 14px;
+                    color: #7f8c8d;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+
+            Row {
+                Text {
+                    text: wind_speed + " km/h";
+                    color: #07101e;
+                    font-size: 18px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: wind_dir + "°";
+                    color: #07101e;
+                    font-size: 18px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: aqieur;
+                    color: #07101e;
+                    font-size: 18px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+            }
+        }
+
+        if type == WeatherSectionType.location: HorizontalLayout {
+            spacing: 10px;
+
+            padding-left: 16px;
+            padding-right: 16px;
+
+            VerticalLayout {
+                alignment: center;
+                FavBtn {
+                    location: root.location-name;
+                    favorited <=> root.is-favorited;
+
+                    toggle-favorite(loc, fav) => {
+                        toggleFav(loc, fav);
+                    }
+                }
+            }
+
+            HorizontalSpacer {
+                stretch: 1;
+            }
+
+            HorizontalLayout {
+                spacing: 32px;
+
+                Text {
+                    text: "📍" + location-name;
+                    font-size: 24px;
+                    color: #07101e;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                    horizontal-alignment: center;
+                }
+
+                HorizontalSpacer {
+                    stretch: 1;
+                }
+
+                VerticalLayout {
+                    Text {
+                        text: "Condition";
+                        font-size: 18px;
+                        color: #7f8c8d;
+                        vertical-alignment: center;
+                        horizontal-alignment: center;
+                    }
+
+                    Text {
+                        text: condition;
+                        font-size: 24px;
+                        color: #07101e;
+                        font-weight: 600;
+                        vertical-alignment: center;
+                        horizontal-alignment: center;
+                    }
+                }
+            }
+
+            HorizontalSpacer {
+                stretch: 1;
+            }
+        }
+
+        if type == WeatherSectionType.main: VerticalLayout {
+            alignment: center;
+            HorizontalLayout {
+                spacing: 15px;
+
+                HorizontalLayout {
+                    VerticalLayout {
+                        Text {
+                            text: "Average Temperature";
+                            font-size: 24px;
+                            color: #7f8c8d;
+                            vertical-alignment: center;
+                            horizontal-alignment: center;
+                        }
+
+                        Text {
+                            text: temp + "°C";
+                            font-size: 32px;
+                            font-weight: 700;
+                            color: #07101e;
+                            vertical-alignment: center;
+                            horizontal-alignment: center;
+                        }
+                    }
+
+                    spacing: 15px;
+
+                    WeatherIcon {
+                        icon: icon;
+                        height: 75px;
+                    }
+                }
+            }
+        }
+    }
+}

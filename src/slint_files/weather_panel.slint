@@ -1,0 +1,117 @@
+import { WeatherSectionType, WeatherSection } from "weather_sections.slint";
+
+export component WeatherPanel inherits Rectangle {
+    // MAIN / LOCATION
+    in property <float> main-temp: 0.0;
+    in property <string> main-icon: "N/A";
+    in property <string> location-name: "N/A";
+    in property <string> location-condition: "N/A";
+    in-out property <bool> is-favorited: false;
+
+    // TEMP
+    in property <float> temp-min: 0.0;
+    in property <float> temp-max: 0.0;
+    in property <float> temp-feels-like: 0.0;
+
+    // PRECIP
+    in property <float> precip-amount: 0.0;
+    in property <float> precip-humidity: 0.0;
+    in property <float> precip-chance: 0.0;
+
+    // SNOW
+    in property <float> snow-amount: 0.0;
+    in property <float> snow-depth-val: 0.0;
+
+    // WIND
+    in property <float> wind-speed-val: 0.0;
+    in property <float> wind-dir-val: 0.0;
+    in property <float> aqi-eur-val: 0.0;
+
+    callback toggle-favorite(string, bool);
+
+    background: rgba(255, 255, 255, 0.5);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    drop-shadow-blur: 30px;
+    drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+    vertical-stretch: 1;
+    horizontal-stretch: 1;
+
+    max-height: 700px;
+    max-width: 600px;
+
+    GridLayout {
+        padding: 16px;
+        spacing: 16px;
+
+        WeatherSection {
+            type: WeatherSectionType.main;
+            temp: main-temp;
+            icon: main-icon;
+
+            row: 0;
+            col: 0;
+            colspan: 2;
+        }
+
+        WeatherSection {
+            type: WeatherSectionType.location;
+            location-name: location-name;
+            condition: location-condition;
+            is-favorited <=> root.is-favorited;
+
+            row: 1;
+            col: 0;
+            colspan: 2;
+
+            toggleFav(loc, fav) => {
+                toggle-favorite(loc, fav);
+            }
+        }
+
+        WeatherSection {
+            type: WeatherSectionType.temp;
+            min: temp-min;
+            feels_like: temp-feels-like;
+            max: temp-max;
+
+            row: 2;
+            col: 0;
+            colspan: 1;
+        }
+
+        WeatherSection {
+            type: WeatherSectionType.wind;
+            wind_speed: wind-speed-val;
+            wind_dir: wind-dir-val;
+            aqieur: aqi-eur-val;
+
+            row: 2;
+            col: 1;
+            colspan: 1;
+        }
+
+        WeatherSection {
+            type: WeatherSectionType.precip;
+            precip: precip-amount;
+            humidity: precip-humidity;
+            precip_ch: precip-chance;
+
+            row: 3;
+            col: 0;
+            colspan: 1;
+        }
+
+        WeatherSection {
+            type: WeatherSectionType.snow;
+            snow: snow-amount;
+            snow_depth: snow-depth-val;
+
+            row: 3;
+            col: 1;
+            colspan: 1;
+        }
+    }
+}

@@ -1,0 +1,433 @@
+import { Button, LineEdit, HorizontalBox }from "std-widgets.slint";
+import { DayCard } from "day_card.slint";
+import { HorizontalSpacer, VerticalSpacer } from "spacers.slint";
+import { WeatherPanel } from "weather_panel.slint";
+import { HourForecast, Hour } from "hour_forecast.slint";
+import { FavoritesPanel, FavoritedLocation } from "favorites_panel.slint";
+import { ErrorToast } from "error_toast.slint";
+import { MyButton } from "my_button.slint";
+
+export struct Day {
+    datetime: string,
+    temp: float,
+    temp-max: float,
+    temp-min: float}
+
+export component MainWindow inherits Window {
+
+    // MAIN / LOCATION
+    in property <float> main-temp: 0.0;
+    in property <string> main-icon: "N/A";
+    in property <string> location-name: "N/A";
+    in property <string> location-condition: "N/A";
+    in-out property <bool> is-favorited: false;
+
+    // TEMP
+    in property <float> temp-min: 0.0;
+    in property <float> temp-max: 0.0;
+    in property <float> temp-feels-like: 0.0;
+
+    // PRECIP
+    in property <float> precip-amount: 0.0;
+    in property <float> precip-humidity: 0.0;
+    in property <float> precip-chance: 0.0;
+
+    // SNOW
+    in property <float> snow-amount: 0.0;
+    in property <float> snow-depth-val: 0.0;
+
+    // WIND
+    in property <float> wind-speed-val: 0.0;
+    in property <float> wind-dir-val: 0.0;
+    in property <float> aqi-eur-val: 0.0;
+
+    in property <[Day]> days: [];
+    in property <[Hour]> hours: [];
+    in property <int> name;
+
+    in-out property <int> selected-day-index: 0;
+
+    in-out property <bool> favorites_panel_active: false;
+    in property <[FavoritedLocation]> favorites: [];
+
+    property <string> text-input: "";
+
+    in-out property <bool> showing-error: false;
+    in-out property <string> error-msg: "default message";
+
+    callback invoke-api(string);
+    callback day-selected(int);
+    callback toggle-fav(string, bool);
+    callback invoke-favorites-api();
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+
+        property <string> icon: main-icon;
+        property <string> previous-icon: main-icon;
+        property <bool> transitioning: false;
+
+        changed icon => {
+            if (!transitioning) {
+                transitioning = true;
+            }
+        }
+
+        Timer {
+            interval: 500ms;
+            running: transitioning;
+            triggered => {
+                previous-icon = icon;
+                transitioning = false;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/clear-day.webp");
+            opacity: icon == "clear-day" ? 1.0 : 0.0;
+            visible: icon == "clear-day" || previous-icon == "clear-day";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/clear-night.webp");
+            opacity: icon == "clear-night" ? 1.0 : 0.0;
+            visible: icon == "clear-night" || previous-icon == "clear-night";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/cloudy.webp");
+            opacity: icon == "cloudy" ? 1.0 : 0.0;
+            visible: icon == "cloudy" || previous-icon == "cloudy";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/fog.webp");
+            opacity: icon == "fog" ? 1.0 : 0.0;
+            visible: icon == "fog" || previous-icon == "fog";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/hail.webp");
+            opacity: icon == "hail" ? 1.0 : 0.0;
+            visible: icon == "hail" || previous-icon == "hail";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/partly-cloudy-day.webp");
+            opacity: icon == "partly-cloudy-day" ? 1.0 : 0.0;
+            visible: icon == "partly-cloudy-day" || previous-icon == "partly-cloudy-day";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/partly-cloudy-night.webp");
+            opacity: icon == "partly-cloudy-night" ? 1.0 : 0.0;
+            visible: icon == "partly-cloudy-night" || previous-icon == "partly-cloudy-night";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/rain.webp");
+            opacity: icon == "rain" ? 1.0 : 0.0;
+            visible: icon == "rain" || previous-icon == "rain";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/sleet.webp");
+            opacity: icon == "sleet" ? 1.0 : 0.0;
+            visible: icon == "sleet" || previous-icon == "sleet";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/snow.webp");
+            opacity: icon == "snow" ? 1.0 : 0.0;
+            visible: icon == "snow" || previous-icon == "snow";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/thunder-rain.webp");
+            opacity: icon == "thunder-rain" ? 1.0 : 0.0;
+            visible: icon == "thunder-rain" || previous-icon == "thunder-rain";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/wind.jpg");
+            opacity: icon == "wind" ? 1.0 : 0.0;
+            visible: icon == "wind" || previous-icon == "wind";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+
+        Image {
+            width: 100%;
+            height: 100%;
+            source: @image-url("../assets/bgs/default.webp");
+            opacity: icon == "default" || icon == "" ? 1.0 : 0.0;
+            visible: icon == "default" || icon == "" || previous-icon == "default" || previous-icon == "";
+            animate opacity {
+                duration: 500ms;
+                easing: ease-in;
+            }
+        }
+    }
+
+    HorizontalLayout {
+        // left side
+        if !favorites_panel_active: VerticalLayout {
+            alignment: center;
+
+            Text {
+                text: "Search";
+                font-size: 20px;
+                horizontal-alignment: center;
+                font-weight: 600;
+            }
+
+            Rectangle {
+                background: rgba(255, 255, 255, 0.5);
+                border-width: 1px;
+                border-color: rgba(255, 255, 255, 0.2);
+                border-radius: 16px;
+                drop-shadow-blur: 30px;
+                drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+                VerticalLayout {
+
+                    padding: 16px;
+                    alignment: center;
+                    spacing: 12px;
+                    Rectangle {
+                        background: rgba(255, 255, 255, 0.2);
+                        border-radius: 8px;
+                        border-width: 2px;
+                        border-color: rgba(255, 255, 255, 0.3);
+
+                        LineEdit {
+                            text <=> text-input;
+                            font-size: 16px;
+                            placeholder-text: "Search for a location...";
+
+                            accepted => {
+                                invoke-api(text-input);
+                            }
+                        }
+                    }
+
+                    MyButton {
+                        text: "Search";
+                        clicked => {
+                            invoke-api(text-input);
+                        }
+                    }
+                }
+            }
+        }
+
+        HorizontalSpacer {
+            stretch: favorites_panel_active ? 1 : 0.3;
+        }
+
+        // middle section
+        VerticalLayout {
+            spacing: 12px;
+
+            vertical-stretch: 2;
+            horizontal-stretch: 1;
+
+            MyButton {
+                text: favorites_panel_active ? "Weather" : "Favorites";
+                clicked => {
+                    favorites_panel_active = !favorites_panel_active;
+                    if (favorites_panel_active) {
+
+                        invoke-favorites-api();
+                    }
+                }
+            }
+
+            VerticalSpacer {
+                stretch: favorites_panel_active ? 0 : 0.25;
+            }
+
+            if favorites_panel_active: FavoritesPanel {
+                vertical-stretch: 1;
+                favorite-items: favorites;
+                call-api(loc) => {
+                    favorites_panel_active = false;
+                    invoke-api(loc);
+                }
+            }
+
+            if !favorites_panel_active: WeatherPanel {
+                main-temp: main-temp;
+                main-icon: main-icon;
+
+                location-name: location-name;
+                location-condition: location-condition;
+                is-favorited <=> root.is-favorited;
+
+                temp-min: temp-min;
+                temp-max: temp-max;
+                temp-feels-like: temp-feels-like;
+
+                precip-amount: precip-amount;
+                precip-humidity: precip-humidity;
+                precip-chance: precip-chance;
+
+                snow-amount: snow-amount;
+                snow-depth-val: snow-depth-val;
+
+                wind-speed-val: wind-speed-val;
+                wind-dir-val: wind-dir-val;
+                aqi-eur-val: aqi-eur-val;
+
+                toggle-favorite(loc, fav) => {
+                    toggle-fav(loc, fav);
+                }
+            }
+
+            if !favorites_panel_active: VerticalSpacer {
+                stretch: 0.5;
+            }
+
+            VerticalSpacer {
+                stretch: favorites_panel_active ? 0 : 0;
+            }
+
+            // Hour Panel
+            if !favorites_panel_active: VerticalLayout {
+                Text {
+                    text: "Hourly Forecast";
+                    font-size: 22px;
+                    horizontal-alignment: center;
+                    font-weight: 600;
+                }
+
+                HourForecast {
+                    horizontal-stretch: 1;
+                    vertical-stretch: 0;
+                    hours: hours;
+                }
+            }
+        }
+
+        HorizontalSpacer {
+            stretch: favorites_panel_active ? 1 : 0.25;
+        }
+
+        // right side
+        if !favorites_panel_active: VerticalLayout {
+            Text {
+                text: "Week Forecast";
+                font-size: 20px;
+                horizontal-alignment: center;
+                font-weight: 600;
+            }
+
+            alignment: center;
+            vertical-stretch: 0;
+            Rectangle {
+                background: rgba(255, 255, 255, 0.5);
+                border-width: 1px;
+                border-color: rgba(255, 255, 255, 0.2);
+                border-radius: 16px;
+                drop-shadow-blur: 30px;
+                drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+                VerticalLayout {
+                    spacing: 8px;
+                    padding: 20px;
+
+                    for day[i] in days: DayCard {
+                        day: day.datetime;
+                        temp: day.temp;
+                        temp_high: day.temp-max;
+                        temp_low: day.temp-min;
+
+                        selected: i == selected-day-index;
+                        clicked => {
+                            selected-day-index = i;
+                            day-selected(i);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if showing-error: ErrorToast {
+        error-message: error-msg;
+
+        x: parent.width - self.width - 20px;
+        y: 20px;
+    }
+}

@@ -1,0 +1,83 @@
+import { HorizontalSpacer, VerticalSpacer } from "spacers.slint";
+
+
+export component DayCard inherits TouchArea {
+    in property <string> day: "Monday";
+    in property <float> temp: 25.2;
+    in property <int> temp_high: 26;
+    in property <int> temp_low: 20;
+    in property <bool> selected: false;
+
+    min-height: 80px;
+    width: 260px;
+    mouse-cursor: pointer;
+
+    Rectangle {
+        background: root.has-hover || selected ? rgba(152, 231, 241, 0.4) : rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        border-width: 1px;
+        border-color: rgba(255, 255, 255, 0.2);
+        drop-shadow-blur: 30px;
+        drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+        x: root.selected ? -15px : (root.has-hover ? -7px : 0px);
+
+        animate x {
+            duration: 200ms;
+            easing: ease-out;
+        }
+
+        animate background {
+            duration: 200ms;
+            easing: ease-out;
+        }
+
+        HorizontalLayout {
+            alignment: space-between;
+            padding: 16px;
+            spacing: 32px;
+
+            Text {
+                text: day;
+                font-size: 24px;
+                font-weight: 600;
+                color: #07101e;
+                horizontal-alignment: left;
+                vertical-alignment: center;
+            }
+
+            VerticalLayout {
+                alignment: center;
+                height: 100%;
+                Text {
+                    text: temp + "°C";
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: #07101e;
+                    horizontal-alignment: center;
+                }
+
+                HorizontalLayout {
+                    spacing: 1rem;
+                    alignment: center;
+
+                    Text {
+                        text: "L:" + temp_low + "°C";
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: rgba(44, 59, 83, 0.6);
+                        horizontal-alignment: center;
+                    }
+
+                    Text {
+                        text: "H:" + temp_high + "°C";
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: rgba(44, 59, 83, 0.6);
+                        horizontal-alignment: center;
+                    }
+                }
+            }
+        }
+    }
+}

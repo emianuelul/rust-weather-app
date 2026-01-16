@@ -1,0 +1,27 @@
+[
+  {
+    "address": "Iasi",
+    "lat": 47.1622,
+    "lon": 27.5889
+  },
+  {
+    "address": "Moscow",
+    "lat": 55.7506,
+    "lon": 37.6175
+  },
+  {
+    "address": "Moscow, TX, United States",
+    "lat": 30.91976,
+    "lon": -94.82798
+  },
+  {
+    "address": "București, România",
+    "lat": 44.4343,
+    "lon": 26.103
+  },
+  {
+    "address": "Holboca, România",
+    "lat": 47.153,
+    "lon": 27.6755
+  }
+]

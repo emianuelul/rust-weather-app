@@ -1,0 +1,103 @@
+export component HourBar inherits Rectangle {
+    in property <string> hour: "00";
+    in property <float> temp: 20.0;
+
+    width: 14px;
+    height: 32px;
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+
+        Rectangle {
+            background: parent.has-hover ? rgba(152, 231, 241, 0.4) : rgba(255, 255, 255, 0.6);
+            border-width: 1px;
+            border-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            drop-shadow-blur: 30px;
+            drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+            width: 14px;
+            height: 32px;
+            y: parent.has-hover ? -8px : 0px;
+
+            animate y {
+                duration: 200ms;
+                easing: ease-out;
+            }
+
+            animate background {
+                duration: 200ms;
+                easing: ease-out;
+            }
+
+            if parent.has-hover: Rectangle {
+                x: -24px;
+                y: -60px;
+                width: 64px;
+                height: 48px;
+
+                background: rgba(30, 30, 30, 0.95);
+                border-radius: 8px;
+
+                GridLayout {
+                    padding: 5px;
+                    Row {
+                        Text {
+                            text: hour + ":00";
+                            color: white;
+                            font-size: 14px;
+                            vertical-alignment: center;
+                            horizontal-alignment: center;
+                        }
+                    }
+
+                    Row {
+                        Text {
+                            text: Math.round(temp * 10) / 10 + "°C";
+                            color: white;
+                            font-size: 16px;
+                            font-weight: 700;
+                            horizontal-alignment: center;
+                            vertical-stretch: 1;
+                        }
+                    }
+                }
+
+                Rectangle {
+                    x: 32px;
+                    y: 50px;
+                    width: 0;
+                    height: 0;
+
+                    Path {
+                        width: 12px;
+                        height: 6px;
+
+                        viewbox-width: 12;
+                        viewbox-height: 6;
+
+                        fill: rgba(30, 30, 30, 0.95);
+
+                        MoveTo {
+                            x: 0;
+                            y: 0;
+                        }
+
+                        LineTo {
+                            x: 6;
+                            y: 6;
+                        }
+
+                        LineTo {
+                            x: 12;
+                            y: 0;
+                        }
+
+                        Close { }
+                    }
+                }
+            }
+        }
+    }
+}

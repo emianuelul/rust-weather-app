@@ -1,0 +1,11 @@
+export component WeatherIcon inherits Rectangle {
+    in property <string> icon: "default";
+
+    property <image> selected-icon:
+        icon == "clear-day" ? @image-url("../assets/icons/clear-day.svg") : icon == "clear-night" ? @image-url("../assets/icons/clear-night.svg") : icon == "cloudy" ? @image-url("../assets/icons/cloudy.svg") : icon == "fog" ? @image-url("../assets/icons/fog.svg") : icon == "hail" ? @image-url("../assets/icons/hail.svg") : icon == "partly-cloudy-day" ? @image-url("../assets/icons/partly-cloudy-day.svg") : icon == "partly-cloudy-night" ? @image-url("../assets/icons/partly-cloudy-night.svg") : icon == "rain" ? @image-url("../assets/icons/rain.svg") : icon == "sleet" ? @image-url("../assets/icons/sleet.svg") : icon == "snow" ? @image-url("../assets/icons/snow.svg") : icon == "thunder-rain" ? @image-url("../assets/icons/thunder-rain.svg") : icon == "thunder-showers-day" ? @image-url("../assets/icons/thunder-showers-day.svg") : icon == "thunder-showers-night" ? @image-url("../assets/icons/thunder-showers-night.svg") : icon == "wind" ? @image-url("../assets/icons/wind.svg") : @image-url("../assets/icons/default.svg");
+
+    Image {
+        source: selected-icon;
+        height: root.height;
+    }
+}

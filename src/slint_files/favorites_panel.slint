@@ -1,0 +1,57 @@
+import { ScrollView } from "std-widgets.slint";
+import { FavoriteCard } from "favorite-card.slint";
+
+export struct FavoritedLocation {
+    icon: string,
+    name: string,
+    temp: float,
+    tempmin: float,
+    tempmax: float,
+}
+
+export component FavoritesPanel inherits Rectangle {
+    in property <[FavoritedLocation]> favorite-items: [
+        { icon: "sunny", name: "Bucharest", temp: 22.0, tempmin: 18.0, tempmax: 26.0 },
+        { icon: "rainy", name: "Iasi", temp: 20.0, tempmin: 19.2, tempmax: 25.2 },
+        { icon: "cloudy", name: "Cluj", temp: 18.0, tempmin: 15.0, tempmax: 21.0 },
+        { icon: "rainy", name: "Timisoara", temp: 19.0, tempmin: 17.0, tempmax: 23.0 },
+        { icon: "snowy", name: "Brasov", temp: 15.0, tempmin: 12.0, tempmax: 18.0 },
+        { icon: "cloudy", name: "Constanta", temp: 21.0, tempmin: 17.0, tempmax: 24.0 },
+        { icon: "cloudy", name: "Constanta", temp: 21.0, tempmin: 17.0, tempmax: 24.0 },
+        { icon: "cloudy", name: "Constanta", temp: 21.0, tempmin: 17.0, tempmax: 24.0 }
+    ];
+
+    callback call-api(string);
+
+    background: rgba(255, 255, 255, 0.5);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    drop-shadow-blur: 30px;
+    drop-shadow-color: rgba(0, 0, 0, 0.15);
+    ScrollView {
+        VerticalLayout {
+            padding: 16px;
+            spacing: 12px;
+            alignment: start;
+
+            for location[i] in favorite-items: Rectangle {
+                height: 80px;
+
+                FavoriteCard {
+                    width: 100%;
+                    height: 100%;
+                    icon: location.icon;
+                    name: location.name;
+                    temp: location.temp;
+                    temp-max: location.tempmax;
+                    temp-min: location.tempmin;
+
+                    call-api(loc) => {
+                        call-api(loc);
+                    }
+                }
+            }
+        }
+    }
+}

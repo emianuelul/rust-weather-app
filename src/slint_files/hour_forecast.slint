@@ -1,0 +1,33 @@
+import { HourBar } from "hour_bar.slint";
+export struct Hour{
+    temp: float,
+    index: string}
+
+
+export component HourForecast inherits Rectangle {
+    in property <[Hour]> hours: [
+        { temp: 2.5, index: "00" },
+        { temp: 2.5, index: "00" },
+        { temp: 2.5, index: "00" },
+        { temp: 2.5, index: "00" },
+        { temp: 2.5, index: "00" }
+    ];
+
+    background: rgba(255, 255, 255, 0.5);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    drop-shadow-blur: 30px;
+    drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+    HorizontalLayout {
+        padding: 20px;
+        spacing: 6px;
+        alignment: center;
+
+        for hour[i] in hours: HourBar {
+            temp: hour.temp;
+            hour: hour.index;
+        }
+    }
+}

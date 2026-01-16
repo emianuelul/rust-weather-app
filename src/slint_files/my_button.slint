@@ -1,0 +1,35 @@
+import { Button } from "std-widgets.slint";
+export component MyButton inherits TouchArea {
+    in property <string> text: "";
+
+    mouse-cursor: pointer;
+    Rectangle {
+        background: root.has-hover ? rgba(255, 255, 255, 0.75) : rgba(255, 255, 255, 0.5);
+        border-width: 1px;
+        border-color: rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        drop-shadow-blur: 30px;
+        drop-shadow-color: rgba(0, 0, 0, 0.15);
+
+        animate background {
+            duration: 150ms;
+            easing: ease-in;
+        }
+
+        HorizontalLayout {
+            padding-top: 6px;
+            padding-bottom: 6px;
+
+            Text {
+                text: text;
+                font-size: 16px;
+                vertical-alignment: center;
+                horizontal-alignment: center;
+
+                color: black;
+
+                wrap: word-wrap;
+            }
+        }
+    }
+}
